@@ -1,6 +1,7 @@
 package book
 
 import (
+	"fmt"
 	"gorm.io/gorm"
 )
 
@@ -14,4 +15,10 @@ type Book struct {
 	StockCode  string `json:"stockCode"`
 	ISBN       string `json:"isbn"`
 	AuthorId   int    `json:"authorId"`
+}
+
+func (a *Book) ToString() string {
+	return fmt.Sprintf("Id: %d \n"+"Name: %s \n"+"PageNumber: %d \n"+"Stock: %d \n"+"Price: %d \n"+
+		"StockCode: %s \n"+"ISBN: %s \n"+"AuthorId: %d \n",
+		a.Id, a.Name, a.PageNumber, a.Stock, a.Price, a.StockCode, a.ISBN, a.AuthorId)
 }

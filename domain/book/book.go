@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"gorm.io/gorm"
 	"io/ioutil"
+	"main/domain/author"
 )
 
 type BookRepository struct {
@@ -30,6 +31,43 @@ func NewBookRepository(db *gorm.DB) (*BookRepository, error) {
 			AuthorId: book.AuthorId}).FirstOrCreate(&book)
 	}
 	return &bookRepo, nil
+}
+
+// FindAll finding all books
+func (b *BookRepository) FindAll() []Book {
+	var books []Book
+	b.db.Find(&books)
+
+	return books
+}
+
+// FindById finding book by id
+func (b *BookRepository) FindById(id int) *Book {
+	var book Book
+	b.db.Where(&Book{Id: id}).First(&book)
+
+	return &book
+}
+
+// FindByName finding book by name
+func (b *BookRepository) FindByName(name string) *Book {
+	var book Book
+	b.db.Where(&Book{Name: name}).First(&book)
+
+	return &book
+}
+
+// FindNameByLike finding books by name. This is Like query.
+func (b *BookRepository) FindNameByLike(name string) []Book {
+	var books []Book
+	b.db.Where("name LIKE ? ", "%"+name+"%").Find(&books)
+
+	return books
+}
+
+func (b *BookRepository) FindAuthorOfBookById(id int, authorRepo *author.AuthorRepository) *author.Author {
+	book := b.FindById(id)
+	return authorRepo.FindById(book.AuthorId)
 }
 
 // GetSampleBookData GetSampleAuthorData reading book json mapping struct and return book list.

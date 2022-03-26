@@ -31,6 +31,34 @@ func NewAuthorRepository(db *gorm.DB) (*AuthorRepository, error) {
 	return &authorRepo, nil
 }
 
+func (a *AuthorRepository) FindAll() []Author {
+	var authors []Author
+	a.db.Find(&authors)
+
+	return authors
+}
+
+func (a *AuthorRepository) FindById(id int) *Author {
+	var author Author
+	a.db.Where(&Author{Id: id}).First(&author)
+
+	return &author
+}
+
+func (a *AuthorRepository) FindByName(name string) *Author {
+	var author Author
+	a.db.Where(&Author{Name: name}).First(&author)
+
+	return &author
+}
+
+func (a *AuthorRepository) FindNameByLike(name string) []Author {
+	var authors []Author
+	a.db.Where("name LIKE ? ", "%"+name+"%").Find(&authors)
+
+	return authors
+}
+
 // GetSampleAuthorData reading author json mapping struct and return author list.
 func getSampleAuthorData() ([]Author, error) {
 	var initialAuthors []Author
