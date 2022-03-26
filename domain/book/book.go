@@ -11,13 +11,19 @@ type BookRepository struct {
 	db *gorm.DB
 }
 
+// NewBookRepository creating AuthorRepository, migrating it and added data.
 func NewBookRepository(db *gorm.DB) (*BookRepository, error) {
 	bookRepo := BookRepository{db: db}
-	bookRepo.db.AutoMigrate(&Book{})
-	sampleBookData, err := GetSampleBookData()
+	err := bookRepo.db.AutoMigrate(&Book{})
+	if err != nil {
+		return nil, fmt.Errorf("cannot migrate book repository %v", err)
+	}
+
+	sampleBookData, err := getSampleBookData()
 	if err != nil {
 		return nil, fmt.Errorf("cannot init Book Repository %v", err)
 	}
+
 	for _, book := range sampleBookData {
 		bookRepo.db.Where(Book{Id: book.Id}).Attrs(Book{Id: book.Id, Name: book.Name, PageNumber: book.PageNumber,
 			Stock: book.Stock, Price: book.Price, StockCode: book.StockCode, ISBN: book.ISBN,
@@ -27,7 +33,7 @@ func NewBookRepository(db *gorm.DB) (*BookRepository, error) {
 }
 
 // GetSampleBookData GetSampleAuthorData reading book json mapping struct and return book list.
-func GetSampleBookData() ([]Book, error) {
+func getSampleBookData() ([]Book, error) {
 	var initialBooks []Book
 	contents, err := ioutil.ReadFile("./data/book.json")
 

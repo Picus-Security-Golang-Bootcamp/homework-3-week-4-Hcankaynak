@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	postgres "main/common/db"
+	"main/domain/author"
 	"main/domain/book"
 )
 
@@ -14,6 +15,11 @@ func main() {
 	}
 
 	_, err = book.NewBookRepository(db)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	_, err = author.NewAuthorRepository(db)
 	if err != nil {
 		log.Fatal(err)
 	}
