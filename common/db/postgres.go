@@ -2,8 +2,10 @@ package postgres
 
 import (
 	"fmt"
+	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"log"
 	"os"
 )
 
@@ -31,5 +33,21 @@ func NewPsqlDB() (*gorm.DB, error) {
 	}
 
 	return db, nil
+}
 
+func LoadDB() (*gorm.DB, error) {
+	// Set environment variables
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	db, err := NewPsqlDB()
+	if err != nil {
+		log.Fatal("Postgres cannot init", err)
+	}
+
+	log.Println("Postgres connected")
+
+	return db, nil
 }
