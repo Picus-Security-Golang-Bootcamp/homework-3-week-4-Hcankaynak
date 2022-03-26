@@ -65,6 +65,7 @@ func (b *BookRepository) FindNameByLike(name string) []Book {
 	return books
 }
 
+// FindAuthorOfBookById Finding book author with 2 query.
 func (b *BookRepository) FindAuthorOfBookById(id int, authorRepo *author.AuthorRepository) *author.Author {
 	book := b.FindById(id)
 	return authorRepo.FindById(book.AuthorId)

@@ -31,6 +31,7 @@ func NewAuthorRepository(db *gorm.DB) (*AuthorRepository, error) {
 	return &authorRepo, nil
 }
 
+// FindAll finding all authors
 func (a *AuthorRepository) FindAll() []Author {
 	var authors []Author
 	a.db.Find(&authors)
@@ -38,6 +39,7 @@ func (a *AuthorRepository) FindAll() []Author {
 	return authors
 }
 
+// FindById finding author by id
 func (a *AuthorRepository) FindById(id int) *Author {
 	var author Author
 	a.db.Where(&Author{Id: id}).First(&author)
@@ -45,6 +47,7 @@ func (a *AuthorRepository) FindById(id int) *Author {
 	return &author
 }
 
+// FindByName finding author by name of it.
 func (a *AuthorRepository) FindByName(name string) *Author {
 	var author Author
 	a.db.Where(&Author{Name: name}).First(&author)
@@ -52,6 +55,7 @@ func (a *AuthorRepository) FindByName(name string) *Author {
 	return &author
 }
 
+// FindNameByLike finding author by name with Like query.
 func (a *AuthorRepository) FindNameByLike(name string) []Author {
 	var authors []Author
 	a.db.Where("name LIKE ? ", "%"+name+"%").Find(&authors)
